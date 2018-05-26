@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Consolas';
+		}
+
+		blink, .blink {
+			-webkit-animation: blink 1s step-end infinite;
+			-moz-animation: blink 1s step-end infinite;
+			-o-animation: blink 1s step-end infinite;
+			animation: blink 1s step-end infinite;
+		}
+
+		@-webkit-keyframes blink {
+			67% { opacity: 0 }
+		}
+
+		@-moz-keyframes blink {
+			67% { opacity: 0 }
+		}
+
+		@-o-keyframes blink {
+			67% { opacity: 0 }
+		}
+
+		@keyframes blink {
+			67% { opacity: 0 }
+		}
+
+		.centro {
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			min-height: 100vh;
+		}
+
+		#tiempo {
+			font-size: 20vw;
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+
+<form id="formulario" class="centro">
+	<p>Minutos: <input type="number" name="minutos" step="1" value="0"> <button>Empezar</button></p>
+	<span id="tiempo">00:00</span>
+</form>
+
+<script>
+	var tiempo = document.getElementById("tiempo");
+	var formulario = document.getElementById("formulario");
+
+	formulario.onsubmit = function() {
+		var total = formulario.minutos.value * 60;
+		tiempo.style.color = "black";
+		parsear(total);
+		iniciar(total);
+		return false;
+	}
+
+	function parsear(tt) {
+		var hh, mm, ss, st;
+		hh = ("00" + Math.floor(tt / 3600)).substr(-2);
+		mm = ("00" + Math.floor((tt / 60) % 60)).substr(-2);
+		ss = ("00" + Math.floor(tt % 60)).substr(-2);
+		st = [hh, mm, ss].join(":"); void((tt < 3600) && (st = st.substr(3)));
+		tiempo.innerHTML = st;
+	}
+
+	function iniciar(tt) {
+		tiempo.classList.remove("blink");
+		var r, g, b;
+		var ttc = tt;
+		var reducir = setInterval(function() {
+			if (tt > 0) {
+				tt--;
+				parsear(tt);
+				r = (tt/ttc >= 0.5) ? 512 - Math.round(512 * (tt/ttc)) : 255;
+				g = (tt/ttc >= 0.5) ? 255 : Math.round(512 * (tt/ttc));
+				b = 0;
+				tiempo.style.color = "rgb(" + r + "," + g + "," + b + ")";
+			} else {
+				tiempo.classList.add("blink");
+				clearInterval(reducir);
+			}
+		}, 1000);
+	}
+</script>
+</body>
+</html>
